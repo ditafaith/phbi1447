@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <title>Peta dan Agenda Dakwah PHBI 1447 H</title>
+  <title>Peta Dakwah PHBI 1447 H</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Leaflet CSS -->
@@ -38,56 +38,49 @@
       z-index: 1800;
     }
 
-    /* LOGO */
     #logo img {
       height: 40px;
       margin-right: 20px;
       border-radius: 4px;
     }
 
-    /* MENU */
     #menu { flex: 1; }
     #menu ul {
       list-style: none;
       margin: 0; padding: 0;
       display: flex;
     }
-    #menu ul li {
-      position: relative;
-    }
+    #menu ul li { position: relative; }
     #menu > ul > li > a {
-      display: block;
       padding: 10px 18px;
+      display: block;
       color: white;
       text-decoration: none;
-      font-size: 14px;
     }
-    #menu ul li:hover {
-      background: #455A64;
-    }
+    #menu ul li:hover { background: #455A64; }
+
+    /* Dropdown */
     #menu ul li ul {
       display: none;
       position: absolute;
       top: 60px;
       background: #455A64;
-      padding: 0;
       min-width: 200px;
+      padding: 0;
       z-index: 9999;
     }
-    #menu ul li ul li a {
+    #menu ul li:hover ul,
+    #menu ul li:focus-within ul {
       display: block;
+    }
+    #menu ul li ul li a {
       padding: 10px;
+      display: block;
       color: white;
       text-decoration: none;
     }
     #menu ul li ul li:hover {
       background: #546E7A;
-    }
-
-    /* Dropdown muncul saat klik & hover */
-    #menu ul li:hover ul,
-    #menu ul li:focus-within ul {
-      display: block;
     }
 
     /* SEARCH */
@@ -102,7 +95,7 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.3);
     }
 
-    /* PETA */
+    /* MAP AREA */
     #map {
       position: absolute;
       top: 100px;
@@ -112,18 +105,33 @@
       z-index: 1;
     }
 
-    /* FOOTER */
+    /* FOOTER KECIL */
     #credit {
       position: fixed;
-      bottom: 5px;
+      bottom: 42px;
       right: 10px;
-      z-index: 999;
+      z-index: 1500;
       font-size: 12px;
       padding: 4px 6px;
       background:white;
       border-radius:4px;
       box-shadow:0 0 4px rgba(0,0,0,0.3);
     }
+
+    /* FOOTER-BANNER BESAR */
+    #footer-banner {
+      width: 100%;
+      background: #0b3d0b;
+      color: white;
+      text-align: center;
+      padding: 12px 0;
+      font-size: 16px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 2000;
+    }
+
   </style>
 
 </head>
@@ -150,17 +158,17 @@
       <li>
         <a href="javascript:void(0)">Tentang ▼</a>
         <ul>
-          <li><a href="#">PHBI 1447 H</a></li>
+          <li><a href="phbi_web/profil.html">Profil PHBI 1447 H</a></li>
         </ul>
       </li>
 
       <li>
         <a href="javascript:void(0)">Zakat ▼</a>
         <ul>
-          <li><a href="#">Pengusulan Mustahiq</a></li>
-          <li><a href="#">Penyaluran</a></li>
-          <li><a href="#">Rekapitulasi</a></li>
-          <li><a href="#">Kalkulator Zakat Mal</a></li>
+          <li><a href="phbi_web/mustahiq.html">Pengusulan Mustahiq</a></li>
+          <li><a href="phbi_web/penyaluran.html">Penyaluran</a></li>
+          <li><a href="phbi_web/rekap.html">Rekapitulasi</a></li>
+          <li><a href="phbi_web/zakatmal.html">Kalkulator Zakat Mal</a></li>
         </ul>
       </li>
 
@@ -168,8 +176,8 @@
         <a href="javascript:void(0)">Kegiatan ▼</a>
         <ul>
           <li><a href="phbi_web/penceramah.html">Penceramah Tarawih</a></li>
-          <li><a href="#">Ifthor Jama'i</a></li>
-          <li><a href="#">Idul Fitri</a></li>
+          <li><a href="phbi_web/ifthor.html">Ifthor Jama'i</a></li>
+          <li><a href="phbi_web/idulfitri.html">Idul Fitri</a></li>
         </ul>
       </li>
 
@@ -184,8 +192,13 @@
 <!-- MAP -->
 <div id="map"></div>
 
-<!-- FOOTER -->
-<div id="credit">araditiya@2025</div>
+<!-- FOOTER KECIL -->
+<div id="credit">phbi1447@2025</div>
+
+<!-- FOOTER-BANNER -->
+<div id="footer-banner">
+  <b><i>Menjalin Ukhuwah, Menggapai Mardhatillah</i></b>
+</div>
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -210,9 +223,7 @@
     { subdomains: ["mt0","mt1","mt2","mt3"], maxZoom: 20 }
   );
 
-  // ============================
-  // POI SELALU ON
-  // ============================
+  // POI
   var poiData = [
     { name: "Masjid Ar Ridhwan (Center)", coords: centerPoint },
     { name: "Gerbang Puri Nirwana 1", coords: [-6.472532, 106.843382] },
@@ -226,9 +237,7 @@
   });
   poiLayer.addTo(map);
 
-  // ============================
-  // JALAN UTAMA
-  // ============================
+  // Jalan utama
   var jalanLayer = L.geoJSON({
     "type":"FeatureCollection",
     "features":[{
@@ -244,13 +253,10 @@
       }
     }]
   },{
-    style:{ color:"#f44336", weight:4 },
-    onEachFeature:(f,l)=>l.bindPopup("<b>"+f.properties.Name+"</b>")
+    style:{ color:"#f44336", weight:4 }
   }).addTo(map);
 
-  // ============================
-  // POLIGON PURI NIRWANA 1
-  // ============================
+  // Polygon perumahan
   var puriLayer = L.geoJSON({
     "type":"FeatureCollection",
     "features":[{
@@ -273,13 +279,10 @@
       weight:3,
       fillColor:"#66bb6a",
       fillOpacity:0.35
-    },
-    onEachFeature:(f,l)=>l.bindPopup("<b>Puri Nirwana 1</b>")
+    }
   }).addTo(map);
 
-  // ============================
-  // LAYER CONTROL
-  // ============================
+  // Layer control
   L.control.layers(
     { "OpenStreetMap": osm, "Google Satellite": googleSat },
     { "Puri Nirwana 1": puriLayer, "Jalan Utama": jalanLayer },
@@ -295,9 +298,7 @@
     { toggleDisplay:true }
   ).addTo(map);
 
-  // ============================
-  // SEARCH BAR DIPINDAH KE KANAN
-  // ============================
+  // Search bar
   var geocoder = L.Control.geocoder({ defaultMarkGeocode:true });
   geocoder.addTo(map);
 
@@ -319,4 +320,3 @@
 
 </body>
 </html>
-
